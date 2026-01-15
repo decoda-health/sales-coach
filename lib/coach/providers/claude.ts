@@ -4,9 +4,9 @@ export class ClaudeProvider implements AIProvider {
   private apiKey: string;
 
   constructor() {
-    const apiKey = process.env.COACH_CLAUDE_API_KEY || process.env.COACH_MODEL_API_KEY;
+    const apiKey = process.env.CLAUDE_API_KEY;
     if (!apiKey) {
-      throw new Error("COACH_CLAUDE_API_KEY environment variable is not set");
+      throw new Error("CLAUDE_API_KEY environment variable is not set");
     }
     this.apiKey = apiKey;
   }

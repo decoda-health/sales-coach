@@ -4,9 +4,9 @@ export class GeminiProvider implements AIProvider {
   private apiKey: string;
 
   constructor() {
-    const apiKey = process.env.COACH_GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("COACH_GEMINI_API_KEY environment variable is not set");
+      throw new Error("GEMINI_API_KEY environment variable is not set");
     }
     this.apiKey = apiKey;
   }
