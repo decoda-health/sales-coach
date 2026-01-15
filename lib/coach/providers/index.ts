@@ -1,7 +1,5 @@
 import { AIProvider, AVAILABLE_MODELS, ModelConfig, ProviderName } from "./types";
-import { ClaudeProvider } from "./claude";
-import { GeminiProvider } from "./gemini";
-import { OpenAIProvider } from "./openai";
+import { LangChainProvider } from "./langchain";
 
 export { AVAILABLE_MODELS, type ModelConfig, type ProviderName, type AIProvider };
 
@@ -10,16 +8,7 @@ export function getModelConfig(modelId: string): ModelConfig | undefined {
 }
 
 export function getProvider(providerName: ProviderName): AIProvider {
-  switch (providerName) {
-    case "claude":
-      return new ClaudeProvider();
-    case "gemini":
-      return new GeminiProvider();
-    case "openai":
-      return new OpenAIProvider();
-    default:
-      throw new Error(`Unknown provider: ${providerName}`);
-  }
+  return new LangChainProvider(providerName);
 }
 
 export function getProviderForModel(modelId: string): AIProvider {
