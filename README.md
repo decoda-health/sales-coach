@@ -14,7 +14,7 @@ AI-powered sales call analysis platform that integrates with Fathom to automatic
 
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Radix UI
 - **Backend**: Next.js API Routes
-- **AI Providers**: Claude (Anthropic), OpenAI, Google Gemini
+- **AI**: LangChain with Claude, OpenAI, and Google Gemini
 - **Storage**: Local CSV + JSON files
 
 ## Setup
@@ -37,9 +37,9 @@ Create `.env.local`:
 
 ```env
 FATHOM_API_KEY=your_fathom_api_key
-CLAUDE_API_KEY=your_anthropic_api_key          # optional
+ANTHROPIC_API_KEY=your_anthropic_api_key       # optional
 OPENAI_API_KEY=your_openai_api_key             # optional
-GEMINI_API_KEY=your_gemini_api_key             # optional
+GOOGLE_API_KEY=your_google_api_key             # optional
 FATHOM_WEBHOOK_SECRET=your_webhook_secret      # optional
 ```
 
