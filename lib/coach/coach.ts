@@ -4,6 +4,7 @@ import {
   SKILLS,
 } from "@/lib/storage/schema";
 import { COACHING_SYSTEM_PROMPT, buildCoachingPrompt } from "./prompts";
+import { getProviderForModel } from "./providers";
 
 type CallMetadata = {
   title: string;
@@ -26,44 +27,22 @@ function formatTimestamp(seconds: number): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+const DEFAULT_MODEL = "claude-sonnet-4-20250514";
+
 export async function generateCoachingArtifact(
   transcript: TranscriptSegment[],
-  metadata: CallMetadata
+  metadata: CallMetadata,
+  modelId: string = DEFAULT_MODEL
 ): Promise<CoachingArtifact> {
-  const apiKey = process.env.COACH_MODEL_API_KEY;
-  if (!apiKey) {
-    throw new Error("COACH_MODEL_API_KEY environment variable is not set");
-  }
-
   const transcriptText = formatTranscriptForPrompt(transcript);
   const userPrompt = buildCoachingPrompt(transcriptText, metadata);
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
-      system: COACHING_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userPrompt }],
-    }),
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Claude API error ${response.status}: ${text}`);
-  }
-
-  const data = await response.json();
-  const content = data.content?.[0]?.text;
-
-  if (!content) {
-    throw new Error("No response from Claude API");
-  }
+  const provider = getProviderForModel(modelId);
+  const content = await provider.generateCompletion(
+    COACHING_SYSTEM_PROMPT,
+    userPrompt,
+    modelId
+  );
 
   let artifact: CoachingArtifact;
   try {

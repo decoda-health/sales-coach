@@ -45,6 +45,11 @@ export async function readCsv<T extends Record<string, unknown>>(
     skip_empty_lines: true,
     cast: (value, context) => {
       if (context.header) return value;
+      // Keep ID fields as strings to ensure === comparisons work
+      const column = context.column as string;
+      if (column.includes("_id") || column.endsWith("_id")) {
+        return value;
+      }
       if (value === "true") return true;
       if (value === "false") return false;
       const num = Number(value);

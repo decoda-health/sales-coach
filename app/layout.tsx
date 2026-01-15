@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
-  title: "Sales Coach",
-  description: "AI-powered sales coaching with call analysis",
+  title: "Sales Coach | AI-Powered Call Intelligence",
+  description: "Transform your sales team with AI-powered call analysis and coaching",
 };
 
 export default function RootLayout({
@@ -13,35 +15,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased bg-gray-50 text-gray-900">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="flex-1 p-6">{children}</main>
-        </div>
+      <body className="antialiased grain-overlay">
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset className="bg-background">
+            <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-3 px-6 bg-background/80 backdrop-blur-sm border-b border-border/50">
+              <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors" />
+              <div className="h-4 w-px bg-border" />
+              <nav className="flex items-center text-sm">
+                <span className="text-muted-foreground">Dashboard</span>
+              </nav>
+            </header>
+            <main className="flex-1 p-8 relative z-10">{children}</main>
+          </SidebarInset>
+        </SidebarProvider>
       </body>
     </html>
-  );
-}
-
-function Sidebar() {
-  return (
-    <aside className="w-64 bg-gray-900 text-gray-100 p-4 flex flex-col">
-      <h1 className="text-xl font-bold mb-8">Sales Coach</h1>
-      <nav className="flex flex-col gap-2">
-        <a
-          href="/"
-          className="px-3 py-2 rounded hover:bg-gray-800 transition-colors"
-        >
-          Dashboard
-        </a>
-        <a
-          href="/reps"
-          className="px-3 py-2 rounded hover:bg-gray-800 transition-colors"
-        >
-          Reps
-        </a>
-      </nav>
-      <div className="mt-auto text-xs text-gray-500">v0.1.0</div>
-    </aside>
   );
 }

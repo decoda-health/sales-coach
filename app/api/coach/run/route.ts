@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readCsv, readTranscript, appendRow } from "@/lib/storage/csv";
+import { readCsv, readTranscript, upsertRow } from "@/lib/storage/csv";
 import {
   CallRecord,
   CoachingRecord,
@@ -8,15 +8,24 @@ import {
 } from "@/lib/storage/schema";
 import { generateCoachingArtifact } from "@/lib/coach/coach";
 import { updateRepLedger } from "@/lib/trends/ledger";
+import { AVAILABLE_MODELS } from "@/lib/coach/providers";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const callId = body.call_id as string;
+    const modelId = body.model as string | undefined;
 
     if (!callId) {
       return NextResponse.json(
         { error: "call_id is required" },
+        { status: 400 }
+      );
+    }
+
+    if (modelId && !AVAILABLE_MODELS.some((m) => m.id === modelId)) {
+      return NextResponse.json(
+        { error: `Invalid model: ${modelId}` },
         { status: 400 }
       );
     }
@@ -36,11 +45,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const artifact = await generateCoachingArtifact(transcriptData.segments, {
-      title: call.title,
-      rep_name: call.rep_name,
-      duration_sec: call.duration_sec,
-    });
+    const artifact = await generateCoachingArtifact(
+      transcriptData.segments,
+      {
+        title: call.title,
+        rep_name: call.rep_name,
+        duration_sec: call.duration_sec,
+      },
+      modelId
+    );
 
     const coachingRecord: CoachingRecord = {
       call_id: callId,
@@ -55,7 +68,7 @@ export async function POST(request: Request) {
       version: COACHING_VERSION,
     };
 
-    await appendRow("coaching.csv", coachingRecord);
+    await upsertRow("coaching.csv", "call_id", coachingRecord);
 
     await updateRepLedger(call.rep_id, artifact.scores);
 
