@@ -9,7 +9,7 @@ import {
   upsertRow,
   writeTranscript,
   getTranscriptPath,
-} from "@/lib/storage/csv";
+} from "@/lib/storage/supabase";
 import { CallRecord, TranscriptSegment } from "@/lib/storage/schema";
 
 export async function POST(request: Request) {

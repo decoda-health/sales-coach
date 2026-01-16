@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readCsv } from "@/lib/storage/csv";
+import { readCsv } from "@/lib/storage/supabase";
 import {
   CallRecord,
   CoachingRecord,

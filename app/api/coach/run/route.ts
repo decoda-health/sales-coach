@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readCsv, readTranscript, upsertRow } from "@/lib/storage/csv";
+import { readCsv, readTranscript, upsertRow } from "@/lib/storage/supabase";
 import {
   CallRecord,
   CoachingRecord,
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Call not found" }, { status: 404 });
     }
 
-    const transcriptData = readTranscript(callId) as Transcript | null;
+    const transcriptData = await readTranscript(callId);
     if (!transcriptData || transcriptData.segments.length === 0) {
       return NextResponse.json(
         { error: "No transcript available for this call" },
