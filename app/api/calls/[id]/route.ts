@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readCsv, readTranscript } from "@/lib/storage/csv";
+import { readCsv, readTranscript } from "@/lib/storage/supabase";
 import {
   CallRecord,
   CoachingRecord,
@@ -21,7 +21,7 @@ export async function GET(
       return NextResponse.json({ error: "Call not found" }, { status: 404 });
     }
 
-    const transcriptData = readTranscript(id) as Transcript | null;
+    const transcriptData = await readTranscript(id);
     const transcript = transcriptData?.segments || [];
 
     const coachingRecords = await readCsv<CoachingRecord>("coaching.csv");

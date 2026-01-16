@@ -1,4 +1,4 @@
-import { readCsv, upsertRowComposite } from "@/lib/storage/csv";
+import { readCsv, upsertRowComposite } from "@/lib/storage/supabase";
 import {
   CoachingRecord,
   RepLedgerRecord,

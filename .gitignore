@@ -29,7 +29,9 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files
-.env*.local
+.env
+.env.*
+!.env.template
 
 # vercel
 .vercel
@@ -38,6 +40,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# data files (keep structure, ignore content)
-/data/*.csv
-/data/transcripts/*.json
